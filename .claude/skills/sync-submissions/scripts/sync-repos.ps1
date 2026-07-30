@@ -198,14 +198,19 @@ foreach ($key in $submissions.Keys) {
         }
     }
     if (-not $wantBranch -or $evalBranch -eq $default) {
-        $defaultInfo = $r.Branches | Where-Object Name -eq $default
-        $defaultStudent = if ($defaultInfo) { $defaultInfo.Student } else { 0 }
-        if ($defaultStudent -eq 0) {
-            $candidates = @($r.Branches | Where-Object { $_.Student -gt 0 } | Sort-Object LastStudent -Descending)
-            if ($candidates) {
-                $evalBranch = $candidates[0].Name
-                $r.Warnings += "auto-selected branch ``$evalBranch``: the default ``$default`` has no student commits and this branch has $($candidates[0].Student) (last $($candidates[0].LastStudent))"
-            }
+        # Pick where the FINAL work lives, not merely where some work lives. Students
+        # branch for the project and often never merge back, so a default branch that
+        # still holds only assignment 1 would score the wrong repository — even though
+        # it is not empty. Most recent student commit wins; ties go to the branch with
+        # more student commits. When the default IS the newest, nothing changes.
+        $candidates = @($r.Branches | Where-Object { $_.Student -gt 0 } |
+                        Sort-Object @{E={$_.LastStudent}; D=$true}, @{E={$_.Student}; D=$true})
+        if ($candidates -and $candidates[0].Name -ne $evalBranch) {
+            $chosen = $candidates[0]
+            $prev = $r.Branches | Where-Object Name -eq $default
+            $prevDesc = if ($prev) { "$($prev.Student) student commits, last $(if ($prev.LastStudent) { $prev.LastStudent } else { 'never' })" } else { "none" }
+            $evalBranch = $chosen.Name
+            $r.Warnings += "auto-selected branch ``$evalBranch`` ($($chosen.Student) student commits, last $($chosen.LastStudent)) over the default ``$default`` ($prevDesc) — the newest student work is here"
         }
     }
     $r.EvalBranch = $evalBranch
