@@ -37,8 +37,13 @@ $env:GCM_INTERACTIVE     = "Never"
 # $ErrorActionPreference = "Stop" turns each line into a terminating error — fatal for
 # a script whose whole point is surviving failed clones. cmd.exe owns the redirection.
 function Invoke-Git([string]$ArgumentLine) {
+    # PowerShell hands native stdout over as an array of lines with the endings already
+    # stripped. Out-String would re-join them with CRLF — and a CR glued to a parsed
+    # value breaks every markdown table row it lands in and defeats every $-anchored
+    # regex (a path ending in `r never matches '\.env$'). Join with LF and never look
+    # at a carriage return again.
     $out = cmd /c "git $ArgumentLine 2>&1"
-    return ($out | Out-String)
+    return (@($out) -join "`n")
 }
 
 # Vendored / generated paths: excluded from the LoC count, flagged when tracked.
@@ -292,9 +297,7 @@ $md += "# Submissions — mapping"
 $md += ""
 $md += "Synced $now from ``$(Split-Path $Export -Leaf)`` · $($results.Count) submissions · **$($ok.Count) cloned**, **$($bad.Count) failed**"
 $md += ""
-$md += "Student work = commits whose author does not match ``$InstructorPattern``."
-$md += "LoC = lines added by student commits on the **evaluated branch**, vendored and generated files excluded — a screening number, not a score."
-$md += "Evaluated branch = the branch from the submitted /tree/ URL when one was given (and found), otherwise the default. It is checked out in the clone."
+$md += "**Reading the table:** *Commits by them* and *Lines added by them* count only commits whose author is the student (not ``$InstructorPattern``), on the evaluated branch. *Lines added* is every line their commits added — code, corpus documents, golden-set JSON, notes — with vendored and generated files excluded. A 1,500-line corpus file makes this number large and that is fine: it screens for empty and enormous, it is not a score. *Evaluated branch* is the branch from the submitted /tree/ URL when one was given, otherwise the default — unless the default holds none of their commits, in which case the branch with their most recent work is auto-selected and a warning records it."
 if ($dupePeople) {
     $md += ""
     $md += "> $(@($dupePeople | Select-Object -Unique).Count) student(s) submitted more than once; the latest submission was kept."
@@ -302,7 +305,7 @@ if ($dupePeople) {
 $md += ""
 $md += "## Overview"
 $md += ""
-$md += "| Student | Evaluated branch | Branches | Student commits | Last activity | Student LoC | Warnings |"
+$md += "| Student | Evaluated branch | Branches | Commits by them | Last commit | Lines added by them | Warnings |"
 $md += "|---|---|---|---|---|---|---|"
 foreach ($r in ($ok | Sort-Object Name)) {
     $last = if ($r.LastStudent) { $r.LastStudent } else { "—" }
