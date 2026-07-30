@@ -152,15 +152,37 @@ foreach ($key in $submissions.Keys) {
         $r.Result = "cloned"; $r.Detail = "new clone"
     }
 
-    # ---- which branch the evaluation should look at
-    # Students often submit the page they were looking at — a /tree/<branch> URL. The
-    # converter records that branch, and it is where their work lives: analysing and
-    # checking out the default instead would score the wrong code.
+    # ---- survey the branches BEFORE choosing which one to evaluate
     $defaultRef = (Invoke-Git "-C `"$dest`" symbolic-ref refs/remotes/origin/HEAD").Trim()
     $default = if ($defaultRef -match 'origin/(.+)$') { $Matches[1] }
                else { (Invoke-Git "-C `"$dest`" rev-parse --abbrev-ref HEAD").Trim() }
     $r.Default = $default
 
+    # Plain `branch -r` output, because everything here transits cmd.exe — where `|`
+    # in a --format string becomes a pipe and %(...) placeholders are not safe either.
+    $branchNames = (Invoke-Git "-C `"$dest`" branch -r") -split "`n" |
+                   ForEach-Object { $_.Trim() } |
+                   Where-Object { $_ -and $_ -notmatch '->' }
+    foreach ($b in $branchNames) {
+        $short = $b -replace '^origin/', ''
+        # %x09 is a TAB, expanded by git itself — nothing for cmd.exe to misread.
+        $log = (Invoke-Git "-C `"$dest`" log `"$b`" --no-merges --format=%an%x09%ad --date=short") -split "`n" |
+               Where-Object { $_ -match "`t" }
+        $studentLines = @($log | Where-Object { ($_ -split "`t")[0] -notmatch $InstructorPattern })
+        $lastStudent = if ($studentLines) { ($studentLines[0] -split "`t")[1] } else { "" }
+        $r.Branches += [pscustomobject]@{
+            Name = $short; Total = $log.Count
+            Student = $studentLines.Count; LastStudent = $lastStudent
+        }
+    }
+
+    # ---- choose the branch the evaluation looks at
+    # Priority 1: the branch from a submitted /tree/ URL — the student told us.
+    # Priority 2: the default branch, IF it holds student work.
+    # Priority 3: the branch with the most recent student commit — students often work
+    #   on a branch and submit the repository root URL; evaluating a default branch
+    #   that contains none of their commits would score the wrong code. The switch is
+    #   recorded, never silent.
     $evalBranch = $default
     if ($wantBranch) {
         Invoke-Git "-C `"$dest`" rev-parse --verify `"origin/$wantBranch`"" | Out-Null
@@ -168,6 +190,17 @@ foreach ($key in $submissions.Keys) {
             $evalBranch = $wantBranch
         } else {
             $r.Warnings += "submitted branch ``$wantBranch`` does not exist on the remote — falling back to ``$default``"
+        }
+    }
+    if (-not $wantBranch -or $evalBranch -eq $default) {
+        $defaultInfo = $r.Branches | Where-Object Name -eq $default
+        $defaultStudent = if ($defaultInfo) { $defaultInfo.Student } else { 0 }
+        if ($defaultStudent -eq 0) {
+            $candidates = @($r.Branches | Where-Object { $_.Student -gt 0 } | Sort-Object LastStudent -Descending)
+            if ($candidates) {
+                $evalBranch = $candidates[0].Name
+                $r.Warnings += "auto-selected branch ``$evalBranch``: the default ``$default`` has no student commits and this branch has $($candidates[0].Student) (last $($candidates[0].LastStudent))"
+            }
         }
     }
     $r.EvalBranch = $evalBranch
@@ -180,29 +213,10 @@ foreach ($key in $submissions.Keys) {
         $results += [pscustomobject]$r; continue
     }
 
-    # branches: every remote head, analysed for student activity.
-    # Plain `branch -r` output, because everything here transits cmd.exe — where `|`
-    # in a --format string becomes a pipe and %(...) placeholders are not safe either.
-    $branchNames = (Invoke-Git "-C `"$dest`" branch -r") -split "`n" |
-                   ForEach-Object { $_.Trim() } |
-                   Where-Object { $_ -and $_ -notmatch '->' }
-    $evalLastStudent = ""
-    foreach ($b in $branchNames) {
-        $short = $b -replace '^origin/', ''
-        # %x09 is a TAB, expanded by git itself — nothing for cmd.exe to misread.
-        $log = (Invoke-Git "-C `"$dest`" log `"$b`" --no-merges --format=%an%x09%ad --date=short") -split "`n" |
-               Where-Object { $_ -match "`t" }
-        $studentLines = @($log | Where-Object { ($_ -split "`t")[0] -notmatch $InstructorPattern })
-        $lastStudent = if ($studentLines) { ($studentLines[0] -split "`t")[1] } else { "" }
-        $r.Branches += [pscustomobject]@{
-            Name = $short; Total = $log.Count
-            Student = $studentLines.Count; LastStudent = $lastStudent
-        }
-        if ($short -eq $evalBranch) { $evalLastStudent = $lastStudent }
-    }
     $evalInfo = $r.Branches | Where-Object Name -eq $evalBranch
     $r.StudentCommits = if ($evalInfo) { $evalInfo.Student } else { 0 }
-    $r.LastStudent    = $evalLastStudent
+    $r.LastStudent    = if ($evalInfo) { $evalInfo.LastStudent } else { "" }
+    $evalLastStudent  = $r.LastStudent
 
     # unmerged work: a branch whose last student commit is newer than the evaluated one's
     foreach ($b in $r.Branches) {
@@ -214,7 +228,7 @@ foreach ($key in $submissions.Keys) {
 
     # authors that are neither the instructor nor obvious bots — catches students
     # committing under a different name than the form's
-    $authors = (Invoke-Git "-C `"$dest`" log --format=%an") -split "`n" |
+    $authors = (Invoke-Git "-C `"$dest`" log --all --format=%an") -split "`n" |
                ForEach-Object { $_.Trim() } | Where-Object { $_ } | Sort-Object -Unique
     $r.OtherAuthors = @($authors | Where-Object { $_ -notmatch $InstructorPattern -and $_ -notmatch '\[bot\]' })
     if ($r.OtherAuthors.Count -eq 0) {
@@ -292,7 +306,9 @@ $md += "| Student | Evaluated branch | Branches | Student commits | Last activit
 $md += "|---|---|---|---|---|---|---|"
 foreach ($r in ($ok | Sort-Object Name)) {
     $last = if ($r.LastStudent) { $r.LastStudent } else { "—" }
-    $ev = if ($r.EvalBranch -ne $r.Default) { "``$($r.EvalBranch)`` (submitted)" } else { "``$($r.EvalBranch)``" }
+    $ev = if ($r.EvalBranch -eq $r.Default) { "``$($r.EvalBranch)``" }
+          elseif ($r.Submitted -eq $r.EvalBranch) { "``$($r.EvalBranch)`` (submitted)" }
+          else { "``$($r.EvalBranch)`` (auto-selected)" }
     $md += "| $($r.Name) | $ev | $($r.Branches.Count) | $($r.StudentCommits) | $last | $($r.StudentLoC) | $($r.Warnings.Count) |"
 }
 $md += ""
