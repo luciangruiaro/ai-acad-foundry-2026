@@ -51,5 +51,9 @@ code/frontend/dist/
 code/backend/*.log
 code/frontend/*.log
 
-# --- local editor/agent tooling state ---
-.claude/
+# --- local editor/agent tooling state (but skills are versioned course tooling) ---
+.claude/*
+!.claude/skills/
+
+# --- student submissions: cloned repos, scores, feedback. Never committed. ---
+_submissions/

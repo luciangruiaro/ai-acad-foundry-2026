@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Session 4 — Azure Foundry in Practice · AI Engineering on Azure</title>
+  <title>Sessions 4 &amp; 5 — Azure Foundry in Practice · AI Engineering on Azure</title>
   <link rel="stylesheet" href="../../resources/theme.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 
     <!-- ============ SIDE NAV ============ -->
     <aside class="side-nav">
-      <p class="side-nav__brand">Session 4<small>AI Engineering on Azure</small></p>
+      <p class="side-nav__brand">Sessions 4 &amp; 5<small>AI Engineering on Azure</small></p>
       <a class="side-nav__link" href="#overview">Overview</a>
       <a class="side-nav__link" href="#agenda">Agenda</a>
       <a class="side-nav__link" href="#outcomes">Outcomes</a>
@@ -48,9 +48,9 @@
       <!-- ============ OVERVIEW ============ -->
       <section id="overview" class="doc-section">
         <header class="hero animate-in">
-          <span class="eyebrow">Session 4 · AI Engineering on Azure</span>
+          <span class="eyebrow">Sessions 4 &amp; 5 · AI Engineering on Azure</span>
           <h1>Azure Foundry in practice — the <span class="gradient-text">tools, the platform, your own environment</span></h1>
-          <p><strong>Today you stop borrowing an environment and build your own, from an empty account to a running application.</strong></p>
+          <p><strong>Across these two sessions you stop borrowing an environment and build your own, from an empty account to a running application with your own agent in it.</strong></p>
           <p>Until now the cloud has been something we looked at together. Today it becomes
             something you operate. We start with the two tools every Azure engineer lives in —
             the <strong>command-line interface</strong> and the <strong>SDK</strong> — and answer
@@ -63,7 +63,7 @@
             everything?</em> Two hands-on labs; sixty minutes of the morning are your keyboard,
             not mine.</p>
           <div style="margin-top:1.2rem; display:flex; gap:.6rem; flex-wrap:wrap;">
-            <span class="badge badge--cyan">Mon 27 Jul · 09:30–12:00 · online</span>
+            <span class="badge badge--cyan">Mon 27 &amp; Tue 28 Jul · 09:30–12:00 · online</span>
             <span class="badge badge--gold">Laptop required · your own Azure account</span>
             <span class="badge badge--navy">Two labs · 60 minutes hands-on</span>
           </div>
@@ -74,7 +74,16 @@
       <section id="agenda" class="doc-section">
         <div>
           <span class="eyebrow">Agenda</span>
-          <h2>The 150 minutes</h2>
+          <h2>Two mornings, one arc</h2>
+        </div>
+        <p class="prose">This page covers <strong>two sessions</strong>. The first morning builds
+          your environment: the CLI and SDK, resources and geography, the two portals, and wiring
+          it all into code. The second morning builds on it: retrieval and AI Search, speech, web
+          grounding, and your own agent — written, run locally, and deployed to Foundry. One page
+          rather than two, because the second morning uses everything the first one made.</p>
+        <div>
+          <span class="eyebrow">Day 1 · Mon 27 Jul</span>
+          <h3 style="margin-top:.3rem">The platform, and your own environment</h3>
         </div>
         <div class="table-wrap">
           <table>
@@ -88,31 +97,51 @@
               <tr><td>10:20</td><td>Resources, resource groups &amp; geography</td><td>15</td><td><span class="badge badge--navy">Theory</span></td></tr>
               <tr><td>10:35</td><td>Break</td><td>10</td><td>—</td></tr>
               <tr><td>10:45</td><td>Two portals, the Foundry menu, and wiring it from code</td><td>15</td><td><span class="badge badge--cyan">Walkthrough</span></td></tr>
-              <tr><td>11:00</td><td>Services vs agents — and the four capabilities: retrieval, speech, web, models</td><td>20</td><td><span class="badge badge--navy">Theory</span></td></tr>
-              <tr><td>11:20</td><td>Live: the RAG pipeline, then building an agent that changes the answer</td><td>20</td><td><span class="badge badge--crimson">Live coding</span></td></tr>
-              <tr><td>11:40</td><td><strong>Lab B</strong> — your own environment, your own agent</td><td>15</td><td><span class="badge badge--gold">Lab</span></td></tr>
-              <tr><td>11:55</td><td>Questions &amp; what's next</td><td>5</td><td><span class="badge badge--coral">Q&amp;A</span></td></tr>
+              <tr><td>11:00</td><td>Wiring it into code: endpoints, keys, and the identity chain</td><td>25</td><td><span class="badge badge--cyan">Walkthrough</span></td></tr>
+              <tr><td>11:25</td><td>Live: the backend running against <em>your</em> environment</td><td>25</td><td><span class="badge badge--crimson">Live coding</span></td></tr>
+              <tr><td>11:50</td><td>Questions &amp; homework for tomorrow</td><td>10</td><td><span class="badge badge--coral">Q&amp;A</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <span class="eyebrow">Day 2 · Tue 28 Jul</span>
+          <h3 style="margin-top:.3rem">Services, retrieval, and your own agent</h3>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Time</th><th>Segment</th><th>Min</th><th>Format</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>09:30</td><td>Recap, and unblocking yesterday's environments</td><td>10</td><td><span class="badge badge--coral">Q&amp;A</span></td></tr>
+              <tr><td>09:40</td><td>Services vs agents — and the four capabilities: retrieval, speech, web, models</td><td>25</td><td><span class="badge badge--navy">Theory</span></td></tr>
+              <tr><td>10:05</td><td>Live: the RAG pipeline end to end, with scores on screen</td><td>25</td><td><span class="badge badge--crimson">Live coding</span></td></tr>
+              <tr><td>10:30</td><td>Break</td><td>10</td><td>—</td></tr>
+              <tr><td>10:40</td><td>Building the agent: persona, system prompt, behaviour</td><td>20</td><td><span class="badge badge--navy">Theory</span></td></tr>
+              <tr><td>11:00</td><td>Live: deploying it to Foundry, and the two catalogues</td><td>20</td><td><span class="badge badge--crimson">Live coding</span></td></tr>
+              <tr><td>11:20</td><td><strong>Lab B</strong> — your own environment, your own agent</td><td>30</td><td><span class="badge badge--gold">Lab</span></td></tr>
+              <tr><td>11:50</td><td>Questions &amp; what's next</td><td>10</td><td><span class="badge badge--coral">Q&amp;A</span></td></tr>
             </tbody>
           </table>
         </div>
         <div class="chart">
-          <svg viewBox="0 0 100 100" role="img" aria-label="Time split of the 150 minutes: labs 35, live coding 20, theory 65, walkthrough 15, questions 5, break 10.">
-            <path fill="var(--chart-lab)" stroke="var(--surface)" stroke-width="2" d="M 50.00 4.00 A 46 46 0 0 1 95.75 45.19 L 76.85 47.18 A 27 27 0 0 0 50.00 23.00 Z"><title>Labs — 35′ (23%)</title></path>
-            <path fill="var(--chart-coding)" stroke="var(--surface)" stroke-width="2" d="M 95.75 45.19 A 46 46 0 0 1 84.18 80.78 L 70.06 68.07 A 27 27 0 0 0 76.85 47.18 Z"><title>Live coding — 20′ (13%)</title></path>
-            <path fill="var(--chart-theory)" stroke="var(--surface)" stroke-width="2" d="M 84.18 80.78 A 46 46 0 0 1 6.25 35.79 L 24.32 41.66 A 27 27 0 0 0 70.06 68.07 Z"><title>Theory — 65′ (44%)</title></path>
-            <path fill="var(--chart-walkthrough)" stroke="var(--surface)" stroke-width="2" d="M 6.25 35.79 A 46 46 0 0 1 22.96 12.79 L 34.13 28.16 A 27 27 0 0 0 24.32 41.66 Z"><title>Walkthrough — 15′ (10%)</title></path>
-            <path fill="var(--chart-qa)" stroke="var(--surface)" stroke-width="2" d="M 22.96 12.79 A 46 46 0 0 1 31.29 7.98 L 39.02 25.33 A 27 27 0 0 0 34.13 28.16 Z"><title>Q&amp;A — 5′ (3%)</title></path>
-            <path fill="var(--chart-break)" stroke="var(--surface)" stroke-width="2" d="M 31.29 7.98 A 46 46 0 0 1 50.00 4.00 L 50.00 23.00 A 27 27 0 0 0 39.02 25.33 Z"><title>Break — 10′ (7%)</title></path>
-            <text x="50" y="49" text-anchor="middle" style="font: 700 13px var(--font-sans); fill: var(--text);">150′</text>
+          <svg viewBox="0 0 100 100" role="img" aria-label="Time split of the 300 minutes: labs 50, live coding 70, theory 90, walkthrough 40, q&a 30, breaks 20.">
+            <path fill="var(--chart-lab)" stroke="var(--surface)" stroke-width="2" d="M 50.00 4.00 A 46 46 0 0 1 89.84 27.00 L 73.38 36.50 A 27 27 0 0 0 50.00 23.00 Z"><title>Labs — 50′ (17%)</title></path>
+            <path fill="var(--chart-coding)" stroke="var(--surface)" stroke-width="2" d="M 89.84 27.00 A 46 46 0 0 1 77.04 87.21 L 65.87 71.84 A 27 27 0 0 0 73.38 36.50 Z"><title>Live coding — 70′ (23%)</title></path>
+            <path fill="var(--chart-theory)" stroke="var(--surface)" stroke-width="2" d="M 77.04 87.21 A 46 46 0 0 1 6.25 64.21 L 24.32 58.34 A 27 27 0 0 0 65.87 71.84 Z"><title>Theory — 90′ (30%)</title></path>
+            <path fill="var(--chart-walkthrough)" stroke="var(--surface)" stroke-width="2" d="M 6.25 64.21 A 46 46 0 0 1 10.16 27.00 L 26.62 36.50 A 27 27 0 0 0 24.32 58.34 Z"><title>Walkthrough — 40′ (13%)</title></path>
+            <path fill="var(--chart-qa)" stroke="var(--surface)" stroke-width="2" d="M 10.16 27.00 A 46 46 0 0 1 31.29 7.98 L 39.02 25.33 A 27 27 0 0 0 26.62 36.50 Z"><title>Q&amp;A — 30′ (10%)</title></path>
+            <path fill="var(--chart-break)" stroke="var(--surface)" stroke-width="2" d="M 31.29 7.98 A 46 46 0 0 1 50.00 4.00 L 50.00 23.00 A 27 27 0 0 0 39.02 25.33 Z"><title>Breaks — 20′ (7%)</title></path>
+            <text x="50" y="49" text-anchor="middle" style="font: 700 13px var(--font-sans); fill: var(--text);">300′</text>
             <text x="50" y="59" text-anchor="middle" style="font: 600 5.5px var(--font-sans); fill: var(--text-muted); letter-spacing: .08em; text-transform: uppercase;">total</text>
           </svg>
           <ul class="chart-legend">
-            <li><span class="chart-legend__swatch" style="background:var(--chart-lab)"></span>Labs — 35′ (23%)</li>
-            <li><span class="chart-legend__swatch" style="background:var(--chart-coding)"></span>Live coding — 20′ (13%)</li>
-            <li><span class="chart-legend__swatch" style="background:var(--chart-theory)"></span>Theory — 65′ (44%)</li>
-            <li><span class="chart-legend__swatch" style="background:var(--chart-walkthrough)"></span>Walkthrough — 15′ (10%)</li>
-            <li><span class="chart-legend__swatch" style="background:var(--chart-qa)"></span>Q&amp;A — 5′ (3%)</li>
-            <li><span class="chart-legend__swatch" style="background:var(--chart-break)"></span>Break — 10′ (7%)</li>
+            <li><span class="chart-legend__swatch" style="background:var(--chart-lab)"></span>Labs — 50′ (17%)</li>
+            <li><span class="chart-legend__swatch" style="background:var(--chart-coding)"></span>Live coding — 70′ (23%)</li>
+            <li><span class="chart-legend__swatch" style="background:var(--chart-theory)"></span>Theory — 90′ (30%)</li>
+            <li><span class="chart-legend__swatch" style="background:var(--chart-walkthrough)"></span>Walkthrough — 40′ (13%)</li>
+            <li><span class="chart-legend__swatch" style="background:var(--chart-qa)"></span>Q&amp;A — 30′ (10%)</li>
+            <li><span class="chart-legend__swatch" style="background:var(--chart-break)"></span>Breaks — 20′ (7%)</li>
           </ul>
         </div>
         <div class="callout callout--tip">
@@ -2939,7 +2968,7 @@ az group delete --name rg-ai-course
     <button class="btn" data-nav="theme" title="Toggle theme" aria-label="Toggle theme">◐</button>
   </nav>
   <footer class="site-footer">
-    Session 4 · Azure Foundry in Practice — AI Engineering on Azure · Libra Bank Academy
+    Sessions 4 &amp; 5 · Azure Foundry in Practice — AI Engineering on Azure · Libra Bank Academy
   </footer>
 
   <script src="../../resources/nav.js"></script>
