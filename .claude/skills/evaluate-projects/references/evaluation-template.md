@@ -9,17 +9,18 @@
 
 | Line | Weight | Score | Weighted |
 |---|---|---|---|
-| Own agent, deployed in Foundry | 20 | | |
+| Own agent, deployed in Foundry — and how well | 20 | | |
 | Own knowledge + golden Q&A set | 20 | | |
-| Engineering practice & mindset | 20 | | |
-| Quality of the student's own code | 15 | | |
-| Interface — own, or real console improvements | 15 | | |
+| Interface — capability, maturity, AI leverage | 15 | | |
+| Engineering practice & mindset | 10 | | |
+| Quality of the student's own code | 10 | | |
 | Design & architecture of additions | 10 | | |
+| The five answers, verified against the codebase | 10 | | |
+| Text to speech, wired in | 5 | | |
 | **Weighted total** | **100** | — | **<t>** |
-| Bonus: text to speech | +5 | — | <b1> |
-| Bonus: robust engineering beyond the bar | +5 | — | <b2> |
-| Bonus: innovation & originality | +5 | — | <b3> |
-| **Final** | | | **<t + b>** |
+| Bonus: robust engineering beyond the bar | +5 | — | <b1> |
+| Bonus: innovation & originality | +5 | — | <b2> |
+| **Final (may exceed 100)** | **/110** | | **<t + b>** |
 
 Weighted = score × weight / 100. Anchors: 1–20 missing · 21–40 broken/partial ·
 41–60 works at course-following level · 61–75 solidly meets (target) · 76–90 strong ·
@@ -27,10 +28,11 @@ Weighted = score × weight / 100. Anchors: 1–20 missing · 21–40 broken/part
 
 ## Evidence per line
 
-### Own agent, deployed in Foundry — <score>/100
+### Own agent, deployed in Foundry — and how well — <score>/100
 - Persona: `<path>` — original / derivative of `<sample>` because `<reason>`
 - Deployment evidence: `<agent id in config / deploy script use / corroborated answer 1>`
-- What the instructions visibly change: `<one line>`
+- Craft: `<what the instructions deliberately change; parameter choices and whether they
+  have a reason; would the integration survive a demo — with the evidence>`
 
 ### Own knowledge + golden Q&A set — <score>/100
 - Corpus: `<path>`, `<n>` documents, subject, invented/real
@@ -42,7 +44,6 @@ Weighted = score × weight / 100. Anchors: 1–20 missing · 21–40 broken/part
 - Clean-clone plausibility from README: `<complete / gaps>`
 - Config via environment: `<yes/no>` · Secrets: `<clean / capped at 20: kind at path>`
 - Dependencies pinned: `<what exists>` · Commit hygiene: `<one line>`
-- Answers vs repository: `<each of the five: matches / diverges — how>`
 
 ### Quality of the student's own code — <score>/100
 *(student-authored files/hunks only — list which files were judged)*
@@ -52,8 +53,12 @@ Weighted = score × weight / 100. Anchors: 1–20 missing · 21–40 broken/part
 - Error handling: `<swallowed / handled — example>`
 - Consistency with the codebase built on: `<one line>`
 
-### Interface — <score>/100
+### Interface — capability, maturity, AI leverage — <score>/100
 - `<own build in <tech> at <path> / course console improved: what capability was added>`
+- Capability beyond the course console: `<features with substance, or "restyle only">`
+- Maturity: `<error/loading states, edge cases, behaviour with backend down — observed where>`
+- AI leverage: `<integrated & verified / pasted-until-it-ran — evidence: dead branches,
+  duplication, unhandled errors, or their absence>`
 - Start command documented: `<where>` · Retrieval visible: `<how>` · RAG toggle: `<y/n>`
 
 ### Design & architecture — <score>/100
@@ -61,10 +66,20 @@ Weighted = score × weight / 100. Anchors: 1–20 missing · 21–40 broken/part
 - Configuration vs hard-coding: `<example>`
 - Patterns used, and whether they earn their keep: `<one line>`
 
+### The five answers, verified against the codebase — <score>/100
+- As a description: `<concrete and specific / generic — one line>`
+- Claims checked: `<n>` — proven `<n>` / unproven `<n>` / contradicted `<n>`
+  - `<claim>` → `<proven at <path> / contradicted by <evidence>>`
+  - `<…one row per substantive claim>`
+- Answer 5 (what is broken) vs reality: `<accurate / optimistic / absent>`
+
+### Text to speech — <score>/100
+- `<working control at <path in their UI>, backend wiring at <path> / endpoint only /
+  absent — evidence>`
+
 ### Bonuses
-- **TTS:** `<absent / wired at <path>, evidence>` → <b1>
-- **Robust engineering:** `<tests/CI/error handling/logging beyond course level, or absent>` → <b2>
-- **Innovation:** `<the idea and why it is one, or "looked for, not found">` → <b3>
+- **Robust engineering:** `<tests/CI/error handling/logging beyond course level, or absent>` → <b1>
+- **Innovation:** `<the idea and why it is one, or "looked for, not found">` → <b2>
 
 ## Summary
 **Objectively good:** `<bullets, each tied to a file or fact>`

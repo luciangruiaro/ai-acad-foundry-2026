@@ -17,7 +17,7 @@ a demo from a system is being able to say, with evidence, whether the answer was
 
 ## What you build
 
-Four requirements. The first three are mandatory; the fourth earns bonus marks.
+Four requirements, all of them mandatory.
 
 ### 1 · Your own agent, deployed in Foundry
 
@@ -66,12 +66,12 @@ capability, not a restyle.
 - Any technology. React, plain HTML and fetch, Streamlit, Gradio, a Python TUI. The
   requirement is that it is yours and it works — not that it is impressive.
 
-### 4 · Text to speech — optional, bonus
+### 4 · Text to speech
 
-Answers read aloud through Azure Speech, wired into your interface. Worth up to **5 bonus
-marks** on a 100-mark scale. Attempt it only when the three requirements above are done:
-a polished voice on an unmeasured assistant scores worse than a plain one that is
-measured.
+Answers read aloud through Azure Speech, wired into your interface — a button or toggle
+a user can actually reach, not an endpoint that exists. It carries **5 of the 100
+marks**, which prices it honestly: required, and deliberately the last thing you build,
+because a polished voice on an unmeasured assistant is worth less than the measurement.
 
 ---
 
@@ -125,21 +125,24 @@ specific beats long and general.
 
 Every submission is reviewed against the same rubric, by a fresh reviewer with no memory
 of the previous one, working only from your repository and your five answers. Each line
-is scored **1–100** and weighted; bonuses are added on top.
+is scored **1–100** and weighted. Bonuses sit **on top of** the 100 — a project that is
+excellent everywhere and earns both bonuses reaches **110**.
 
 | # | Criterion | Weight |
 |---|---|---|
-| 1 | Your agent, deployed in Foundry | 20 |
+| 1 | Your agent, deployed in Foundry — and how well | 20 |
 | 2 | Your knowledge, and the golden Q&A set | 20 |
-| 3 | Engineering practice & mindset | 20 |
-| 4 | Quality of your own code | 15 |
-| 5 | The interface — your own, or real improvements to the course console | 15 |
+| 3 | The interface — capability, maturity, and how you leveraged AI | 15 |
+| 4 | Engineering practice & mindset | 10 |
+| 5 | Quality of your own code | 10 |
 | 6 | Design & architecture of what you added | 10 |
-| B1 | Text to speech, wired in | up to +5 |
-| B2 | Robust engineering beyond the course bar | up to +5 |
-| B3 | Innovation & originality | up to +5 |
+| 7 | Your five answers, verified against the codebase | 10 |
+| 8 | Text to speech, wired in | 5 |
+| B1 | Robust engineering beyond the course bar | up to +5 |
+| B2 | Innovation & originality | up to +5 |
 
-Weighted total = Σ score × weight / 100, out of **100**, plus up to **15** bonus.
+Weighted total = Σ score × weight / 100 → out of **100** · final = weighted total +
+bonuses → up to **110**.
 
 The 1–100 line scores follow fixed anchors, so two reviewers land in the same range:
 
@@ -154,55 +157,69 @@ The 1–100 line scores follow fixed anchors, so two reviewers land in the same 
 
 ### What each criterion looks for
 
-**1 · Your agent, deployed in Foundry (20).** A persona of your own authorship,
-meaningfully different from the four samples. Evidence it is deployed and invocable —
-not just a JSON file. An explanation, in your own words, of what its instructions change
-about the answers.
+**1 · Your agent, deployed in Foundry — and how well (20).** Existence is the entry
+ticket; the score is about the craft. A persona of your own authorship, meaningfully
+different from the four samples. Evidence it is deployed and invocable. And then the
+quality of the doing: instructions that visibly and deliberately shape the answers,
+sensible parameter choices you can defend, and integration that survives the demo — a
+deployed-but-lazy persona lands mid-scale, not at the top.
 
 **2 · Your knowledge, and the golden Q&A set (20).** A coherent corpus of your own. At
 least ten golden questions with known answers, including questions that should be
 refused. A reproducible way to run them and a recorded score. Best of all: a before and
 after, with an account of what you changed.
 
-**3 · Engineering practice & mindset (20).** The difference between engineering and
-vibecoding, made visible: a clean clone plus your README plausibly gives a working
-system; configuration lives in environment variables with no secrets in the history —
-**a committed live key caps this line at 20**; dependencies are pinned; commits are
-small, described, and yours; claims in your five answers match the repository; what is
-measured is measured, and what is broken is named.
+**3 · The interface — capability, maturity, and how you leveraged AI (15).** Three
+lenses on the same artifact. *Capability*: what it actually does beyond the course
+console — features with substance, not decoration. *Maturity*: loading and error states,
+edge cases, how it behaves when the backend is down or the answer is empty, and how the
+whole thing is framed and presented. *AI leverage*: we assume AI wrote much of it — the
+question is whether what it wrote makes sense: integrated with the rest, understood by
+you, verified to work. Code that was clearly pasted until it ran — dead branches,
+duplicated logic, missing error handling, no evidence anything was checked — is
+vibecoding, and it scores accordingly however impressive the screenshot.
 
-**4 · Quality of your own code (15).** Judged only on code you added or changed, not on
-the course code you inherited. Readable names, functions that do one thing, no dead code
-or commented-out experiments left behind, errors handled rather than swallowed, and
-consistency with the codebase you built on. AI-generated code is fine — left unread and
-unintegrated, it is not.
+**4 · Engineering practice & mindset (10).** A clean clone plus your README plausibly
+gives a working system; configuration lives in environment variables with no secrets in
+the history — **a committed live key caps this line at 20**; dependencies are pinned;
+commits are small, described, and yours.
 
-**5 · The interface (15).** Either your own build, in any technology, or **substantive
-improvements to the course console** — new capability, not a restyle. In both cases:
-started from a documented command, retrieval made visible (passages, scores or
-citations), the RAG toggle present.
+**5 · Quality of your own code (10).** Judged only on code you added or changed, never
+on the course code you inherited. Readable names, functions that do one thing, no dead
+code or commented-out experiments, errors handled rather than swallowed, consistency
+with the codebase you built on.
 
 **6 · Design & architecture (10).** How your additions are shaped: separated concerns,
 sensible boundaries, configuration over hard-coding, patterns used where they earn their
 keep — and no cargo-cult abstraction where a function would do.
 
-**B1 · Text to speech (+5).** Working and wired into your interface, not at the expense
-of the core.
+**7 · Your five answers, verified against the codebase (10).** The description you
+submitted is part of the work, and it is graded twice over. First, as a description: is
+it concrete, specific and complete — does it name the persona, the corpus, the numbers,
+the commands — or is it vague enough to fit anyone's project? Second, as a set of
+claims: every checkable statement is checked against the repository. A claim the
+repository proves earns the line; a claim it contradicts costs more than the feature
+was worth, because now the whole description is in doubt. An accurate, modest
+description of a partial project scores high here. An inflated one does not — and an
+honest answer 5 (what is broken) is the cheapest way to score well.
 
-**B2 · Robust engineering beyond the bar (+5).** Things the course did not require but
+**8 · Text to speech (5).** Working, reachable from your interface, and not at the
+expense of anything above.
+
+**B1 · Robust engineering beyond the bar (+5).** Things the course did not require but
 real systems do: tests that run, deliberate error handling, logging that would help at
 3 a.m., a CI check, structured evaluation beyond the golden set.
 
-**B3 · Innovation & originality (+5).** An idea that is genuinely yours: an unexpected
+**B2 · Innovation & originality (+5).** An idea that is genuinely yours: an unexpected
 corpus, a retrieval twist, an agent capability, an evaluation method, a UI concept.
 Named in your feedback when it exists — reviewers are explicitly asked to look for it.
 
 ### What does not affect your mark
 
-- How pretty the interface is.
+- How pretty the interface is — maturity is about behaviour, not styling.
 - How high the golden-set score is. A measured 6/10 with a clear account of the four
   failures beats an unmeasured claim of perfection.
-- How much AI wrote. Only whether you read, integrated and can explain it.
+- How much AI wrote. Only whether you read, integrated, verified and can explain it.
 - Whether you attempted the bonuses.
 
 ---
@@ -223,7 +240,8 @@ You have limited time, so spend it where the marks are.
 5. **Tune retrieval, re-run the golden set, record the second number.**
 6. **Write the README as if you had never seen the project.** Then run the submission
    prompt and read what it says about section 5.
-7. **Text to speech, if time is left.**
+7. **Text to speech.** Required — and still last, because it is worth five marks and
+   the measurement above is worth twenty.
 
 ---
 

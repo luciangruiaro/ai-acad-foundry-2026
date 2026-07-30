@@ -1629,10 +1629,11 @@ steps:
             </thead>
             <tbody>
               <tr>
-                <td><strong>Your agent, deployed in Foundry</strong></td>
-                <td>A persona you wrote, for a domain you chose — deployed to the Agent Service and
-                  answering through <code>agent_mode=foundry</code>. A renamed copy of
-                  <code>teller</code> is not a persona.</td>
+                <td><strong>Your agent, deployed in Foundry — and how well</strong></td>
+                <td>A persona you wrote, deployed and answering through
+                  <code>agent_mode=foundry</code> — then the craft: instructions that visibly
+                  shape the answers, parameters you can defend, integration that survives the
+                  demo. Deployed-but-lazy lands mid-scale.</td>
                 <td>20</td>
               </tr>
               <tr>
@@ -1643,24 +1644,25 @@ steps:
                 <td>20</td>
               </tr>
               <tr>
+                <td><strong>The interface — capability, maturity, AI leverage</strong></td>
+                <td>What it does beyond the course console; how it behaves at the edges (errors,
+                  empty answers, backend down) and how it is framed; and whether the AI-written
+                  parts make sense — integrated, understood, verified — rather than pasted until
+                  they ran.</td>
+                <td>15</td>
+              </tr>
+              <tr>
                 <td><strong>Engineering practice &amp; mindset</strong></td>
                 <td>Clean clone + README gives a working system; configuration in environment
                   variables; no secrets in the history; pinned dependencies; commits that are
-                  small, described and yours; answers that match the repository.</td>
-                <td>20</td>
+                  small, described and yours.</td>
+                <td>10</td>
               </tr>
               <tr>
                 <td><strong>Quality of your own code</strong></td>
                 <td>Judged only on what you added: readable names, functions that do one thing, no
-                  dead code, errors handled. AI-written is fine — unread is not.</td>
-                <td>15</td>
-              </tr>
-              <tr>
-                <td><strong>The interface</strong></td>
-                <td>Your own build, any technology — or the course console substantively improved
-                  (new capability, not a restyle). Retrieval visible, RAG toggle, documented start
-                  command.</td>
-                <td>15</td>
+                  dead code, errors handled.</td>
+                <td>10</td>
               </tr>
               <tr>
                 <td><strong>Design &amp; architecture</strong></td>
@@ -1669,9 +1671,16 @@ steps:
                 <td>10</td>
               </tr>
               <tr>
-                <td>Text to speech <span class="badge badge--gold">bonus</span></td>
-                <td>Working and wired into your interface.</td>
-                <td>+5</td>
+                <td><strong>Your five answers, verified against the codebase</strong></td>
+                <td>The description is part of the work: concrete and specific, and every checkable
+                  claim checked against the repository. Proven claims earn it; contradicted claims
+                  cost more than the feature was worth.</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td><strong>Text to speech</strong></td>
+                <td>Working and reachable from your interface — a button, not just an endpoint.</td>
+                <td>5</td>
               </tr>
               <tr>
                 <td>Robust engineering <span class="badge badge--gold">bonus</span></td>
@@ -1692,11 +1701,13 @@ steps:
         <div class="callout callout--tip">
           <p class="callout__title">Where the marks actually are</p>
           <p>Every line is scored 1–100 and weighted; 61–75 on a line means "solidly meets the
-            requirement" and is the target. Notice where the weight sits: the agent, the
-            <em>measured</em> knowledge base, and engineering practice together carry 60 of the
-            100 — a plain interface in front of a measured, well-kept system beats a beautiful one
-            in front of an unmeasured mess, every time. Build the corpus and the golden set first,
-            record the bad first score, and tune from there.</p>
+            requirement" and is the target. The bonuses sit <em>on top</em> of the 100, so a
+            project that is excellent everywhere can reach <strong>110</strong>. Notice where the
+            weight sits: the agent and the <em>measured</em> knowledge base carry 40 of the 100,
+            and your written answers are themselves worth 10 — checked claim by claim against the
+            repository, where an accurate account of a partial project beats an inflated account
+            of a finished one. Build the corpus and the golden set first, record the bad first
+            score, and tune from there.</p>
         </div>
 
         <div class="callout callout--info">

@@ -26,21 +26,23 @@ reference gets fixed.
 
 ## The rubric, in brief
 
-Six weighted lines and three bonuses, **each scored 1–100**:
+Eight weighted lines and two bonuses, **each scored 1–100**. Bonuses sit **on top** of
+the weighted 100, so the final score runs to **110**:
 
 | Line | Weight |
 |---|---|
-| Own agent, deployed in Foundry | 20 |
+| Own agent, deployed in Foundry — and how well | 20 |
 | Own knowledge + golden Q&A set | 20 |
-| Engineering practice & mindset | 20 |
-| Quality of the student's own code | 15 |
-| Interface — own build, or real improvements to the course console | 15 |
+| Interface — capability, maturity, AI leverage vs vibecoding | 15 |
+| Engineering practice & mindset | 10 |
+| Quality of the student's own code | 10 |
 | Design & architecture of what they added | 10 |
-| Bonus: text to speech wired in | +5 |
+| The five answers, verified against the codebase | 10 |
+| Text to speech, wired in | 5 |
 | Bonus: robust engineering beyond the bar | +5 |
 | Bonus: innovation & originality | +5 |
 
-Weighted total = Σ score × weight / 100 → **/100**, plus up to **+15** bonus.
+Weighted total = Σ score × weight / 100 → **/100** · final = total + bonuses → **/110**.
 Anchors: 1–20 missing · 21–40 broken/partial · 41–60 works at course-following level ·
 **61–75 solidly meets (the target)** · 76–90 strong with defensible decisions ·
 91–100 hand-over quality.
@@ -73,6 +75,8 @@ Non-negotiable rules carried in the prompt:
 4. **Every line score carries evidence** or is 1–20 with "no evidence found".
 5. **Student code only** on the code-quality and design lines: judge files and hunks
    from non-instructor commits (`git log --author`-based), never inherited course code.
+   The same lens applies inside the interface line: AI-written is expected — pasted,
+   unintegrated and unverified is what costs.
 6. **Secrets: detect, never reproduce.** Kind and location only.
 7. **Look for innovation deliberately.** One explicit pass over the repo asking "what
    here did the course not teach?" — an unexpected corpus, a retrieval twist, an agent

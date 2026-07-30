@@ -42,7 +42,7 @@ student's work, and only that is judged on the code lines.**
 4. **Every line score carries evidence**: a path, a line, a `git log` excerpt, a
    quotation. No evidence → score in the 1–20 band and the words "no evidence found".
 5. **The five answers are claims to verify.** The repository wins every disagreement;
-   record each one — they feed the engineering-practice line.
+   record each one — they are the substance of scoring line 7.
 6. **Secrets: detect, never reproduce.** Check tree and history (`git log -p` on
    `.env*` and config). Record kind and location only.
 
@@ -55,33 +55,51 @@ strong, with decisions the author can defend · **91–100** could be handed to 
 engineer without explanation. Do not cluster at round numbers out of caution; commit to
 a number the evidence supports.
 
-1. **Own agent, deployed in Foundry (weight 20).** Original persona vs the four
-   samples; evidence of deployment and invocability (agent id in config, deploy-script
-   usage, corroborated answer 1); instructions that visibly shape behaviour.
+1. **Own agent, deployed in Foundry — and how well (weight 20).** Existence is the
+   entry ticket; the score is the craft. Original persona vs the four samples; evidence
+   of deployment and invocability (agent id in config, deploy-script usage,
+   corroborated answer 1). Then quality: instructions that visibly and deliberately
+   shape behaviour, parameter choices with a reason, integration that would survive a
+   demo. Deployed-but-lazy — a thin persona pushed once and never exercised — lands
+   mid-scale, not at the top.
 2. **Own knowledge + golden Q&A set (weight 20).** Coherent own corpus (~15+
    documents); 10+ golden questions with known answers, ≥2 refusal cases; a
    reproducible runner; a recorded score — before/after tuning is the strongest form.
-3. **Engineering practice & mindset (weight 20).** Clean-clone plausibility from the
+3. **Interface — capability, maturity, AI leverage (weight 15).** Three lenses on one
+   artifact. *Capability*: what it does beyond the course console — features with
+   substance. *Maturity*: loading and error states, edge cases, behaviour when the
+   backend is down or an answer is empty, and how the whole thing is framed. *AI
+   leverage*: assume AI wrote much of it; the question is whether what it wrote makes
+   sense — integrated with the rest, plausibly understood, verified to work. Pasted-
+   until-it-ran code (dead branches, duplicated logic, missing error handling, no
+   evidence of any verification) is vibecoding and scores in the lower bands however
+   good the screenshot.
+4. **Engineering practice & mindset (weight 10).** Clean-clone plausibility from the
    README; configuration via environment; pinned dependencies; readable, owned commit
-   history; answers that match the repository. **A live committed secret caps this
-   line at 20.**
-4. **Quality of the student's own code (weight 15).** Identify student-authored files
-   and hunks first (`git log --format='%H %an' + git show`), then judge only those:
+   history. **A live committed secret caps this line at 20.**
+5. **Quality of the student's own code (weight 10).** Identify student-authored files
+   and hunks first (`git log --format='%H %an'` + `git show`), then judge only those:
    naming, function size and focus, dead code, error handling, consistency with the
-   codebase they built on. AI-written is fine; unread and unintegrated is not. List
-   which files you judged.
-5. **Interface (weight 15).** Either their own build (any technology) or substantive
-   improvements to the course console — new capability, not a restyle. Documented
-   start command, retrieval visible, RAG toggle.
+   codebase they built on. List which files you judged.
 6. **Design & architecture (weight 10).** Shape of the additions: separated concerns,
    configuration over hard-coding, patterns where they earn their keep, no cargo-cult
    abstraction.
+7. **The five answers, verified against the codebase (weight 10).** Grade the
+   description twice over. As a description: concrete, specific, complete — persona
+   named, corpus named, numbers given, commands given — or vague enough to fit any
+   project? As claims: extract every checkable statement and check it. For each one
+   record proven / unproven / contradicted, with the evidence. Proven claims and an
+   honest answer 5 earn the line; a contradicted claim costs more than the feature was
+   worth, because it puts the whole description in doubt. An accurate account of a
+   partial project scores high here; an inflated account of anything does not.
+8. **Text to speech (weight 5).** Working and reachable from their interface — a
+   control a user can find, not just an endpoint that exists.
 
-Bonuses, 0–5 marks each, evidence required:
-- **B1 Text to speech** wired into their interface.
-- **B2 Robust engineering beyond the bar**: tests that run, deliberate error handling,
+Bonuses, 0–5 marks each, **added on top of the weighted 100** (final score may exceed
+100), evidence required:
+- **B1 Robust engineering beyond the bar**: tests that run, deliberate error handling,
   useful logging, CI — things the course did not require.
-- **B3 Innovation & originality**: make one explicit pass asking *"what here did the
+- **B2 Innovation & originality**: make one explicit pass asking *"what here did the
   course not teach?"* — corpus concept, retrieval twist, agent capability, evaluation
   method, UI idea. State what you found or that you looked and found none.
 
