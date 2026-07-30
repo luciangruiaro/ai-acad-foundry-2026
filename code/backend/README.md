@@ -152,7 +152,7 @@ it lives in the git-ignored `.env`, it expires, and re-running the script rotate
 running *in* Azure gets a **managed identity** — same `DefaultAzureCredential`, same
 code, no secret to store or rotate at all. The three lanes, in order of preference:
 managed identity → service principal → key. Deploying it that way is
-[Session 6](../../docs/sessions/s06-shipping-containers.html).
+[Session 6](../../docs/sessions/s06-07-shipping-containers.html).
 
 The app container overrides `QDRANT_URL` automatically and bind-mounts `./app`, so
 **live reload works inside the container too** — edit a file, watch it restart. That

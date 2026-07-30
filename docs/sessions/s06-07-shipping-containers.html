@@ -1625,53 +1625,64 @@ steps:
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>#</th><th>Requirement</th><th>The bar to clear</th><th>Marks</th></tr>
+              <tr><th>Criterion</th><th>The bar to clear</th><th>Weight</th></tr>
             </thead>
             <tbody>
               <tr>
-                <td>1</td>
-                <td><strong>Your own agent, deployed in Foundry</strong></td>
+                <td><strong>Your agent, deployed in Foundry</strong></td>
                 <td>A persona you wrote, for a domain you chose — deployed to the Agent Service and
                   answering through <code>agent_mode=foundry</code>. A renamed copy of
                   <code>teller</code> is not a persona.</td>
-                <td>25</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td><strong>Your own knowledge, and a golden set</strong></td>
-                <td>A corpus you assembled (15+ documents), ingested through your pipeline — plus
-                  10+ questions with known answers, at least two of which the assistant should
-                  <em>refuse</em>, and a reproducible way to run them and get a score. Record the
-                  score before and after tuning; the delta is the interesting part.</td>
-                <td>25</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td><strong>Your own interface</strong></td>
-                <td>Built by you, any technology, started from a documented command. It shows the
-                  retrieval — passages, scores or citations — and it has the RAG toggle, so one
-                  question can be answered grounded and ungrounded, side by side.</td>
                 <td>20</td>
               </tr>
               <tr>
-                <td>—</td>
-                <td>It runs, and it is put together sensibly</td>
-                <td>A clean clone plus your README gives a working system. No secrets in the
-                  history — a committed key caps this criterion regardless of everything else.</td>
+                <td><strong>Your knowledge, and the golden Q&amp;A set</strong></td>
+                <td>A corpus you assembled (15+ documents), 10+ questions with known answers — at
+                  least two the assistant should <em>refuse</em> — a reproducible way to run them,
+                  and a recorded score. Before/after tuning is the strongest evidence.</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td><strong>Engineering practice &amp; mindset</strong></td>
+                <td>Clean clone + README gives a working system; configuration in environment
+                  variables; no secrets in the history; pinned dependencies; commits that are
+                  small, described and yours; answers that match the repository.</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td><strong>Quality of your own code</strong></td>
+                <td>Judged only on what you added: readable names, functions that do one thing, no
+                  dead code, errors handled. AI-written is fine — unread is not.</td>
                 <td>15</td>
               </tr>
               <tr>
-                <td>—</td>
-                <td>Ownership and understanding</td>
-                <td>Commits that are yours; five written answers that match what the repository
-                  actually contains. Accuracy is worth more here than achievement.</td>
+                <td><strong>The interface</strong></td>
+                <td>Your own build, any technology — or the course console substantively improved
+                  (new capability, not a restyle). Retrieval visible, RAG toggle, documented start
+                  command.</td>
                 <td>15</td>
               </tr>
               <tr>
-                <td>4</td>
-                <td>Text to speech <span class="badge badge--gold">optional</span></td>
-                <td>Answers read aloud through Azure Speech, wired into your interface — attempted
-                  only after the three requirements above are done.</td>
+                <td><strong>Design &amp; architecture</strong></td>
+                <td>Your additions have shape: separated concerns, configuration over hard-coding,
+                  patterns where they earn their keep.</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td>Text to speech <span class="badge badge--gold">bonus</span></td>
+                <td>Working and wired into your interface.</td>
+                <td>+5</td>
+              </tr>
+              <tr>
+                <td>Robust engineering <span class="badge badge--gold">bonus</span></td>
+                <td>Beyond the course bar: tests that run, deliberate error handling, useful
+                  logging, a CI check.</td>
+                <td>+5</td>
+              </tr>
+              <tr>
+                <td>Innovation &amp; originality <span class="badge badge--gold">bonus</span></td>
+                <td>An idea that is genuinely yours — corpus, retrieval, agent capability,
+                  evaluation method, UI concept. Reviewers are asked to look for it.</td>
                 <td>+5</td>
               </tr>
             </tbody>
@@ -1680,9 +1691,11 @@ steps:
 
         <div class="callout callout--tip">
           <p class="callout__title">Where the marks actually are</p>
-          <p>The two 25-mark criteria are the agent and the <em>measured</em> knowledge base — not
-            the interface. A plain interface in front of a measured system beats a beautiful one in
-            front of an unmeasured system, every time. Build the corpus and the golden set first,
+          <p>Every line is scored 1–100 and weighted; 61–75 on a line means "solidly meets the
+            requirement" and is the target. Notice where the weight sits: the agent, the
+            <em>measured</em> knowledge base, and engineering practice together carry 60 of the
+            100 — a plain interface in front of a measured, well-kept system beats a beautiful one
+            in front of an unmeasured mess, every time. Build the corpus and the golden set first,
             record the bad first score, and tune from there.</p>
         </div>
 
@@ -1785,7 +1798,7 @@ steps:
           <li><code>code/backend/Dockerfile</code> and <code>code/backend/docker-compose.yml</code> — the shippable default and the development override, side by side</li>
           <li><code>code/frontend/Dockerfile</code> and <code>code/frontend/nginx.conf.template</code> — the two targets, and the proxy that replaces Vite</li>
           <li><code>code/backend/scripts/azure/</code> — the whole environment as scripts, in PowerShell and bash</li>
-          <li><a href="s04-foundry-in-practice.html">Session 4 — Azure Foundry in practice</a>, section <em>The complete recipe</em>, for the agent half of the story</li>
+          <li><a href="s04-05-foundry-in-practice.html">Sessions 4 &amp; 5 — Azure Foundry in practice</a>, section <em>The complete recipe</em>, for the agent half of the story</li>
           <li><a href="../topics/ref-cloud-computing.html">Reference — cloud computing</a>, for the service-model vocabulary this session assumes</li>
         </ul>
       </section>

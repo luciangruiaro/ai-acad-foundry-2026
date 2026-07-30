@@ -54,7 +54,8 @@ set**: questions paired with the answers you know to be correct.
 
 ### 3 · Your own interface
 
-A user interface you built, not the shipped console with a different colour.
+A user interface you built — or the course console, substantively improved: new
+capability, not a restyle.
 
 - It talks to your backend, and it makes the retrieval **visible** — the passages, the
   scores, or at minimum the citations. A chat box that hides the pipeline is a worse
@@ -123,67 +124,86 @@ specific beats long and general.
 ## How it is evaluated
 
 Every submission is reviewed against the same rubric, by a fresh reviewer with no memory
-of the previous one, working only from your repository and your brief. Six criteria, 100
-marks, plus 5 optional.
+of the previous one, working only from your repository and your five answers. Each line
+is scored **1–100** and weighted; bonuses are added on top.
 
-| # | Criterion | Marks |
+| # | Criterion | Weight |
 |---|---|---|
-| 1 | Your agent, deployed in Foundry | 25 |
-| 2 | Your knowledge, and the golden set | 25 |
-| 3 | Your interface | 20 |
-| 4 | It runs, and it is put together sensibly | 15 |
-| 5 | Ownership and understanding | 15 |
-| 6 | Text to speech | +5 |
+| 1 | Your agent, deployed in Foundry | 20 |
+| 2 | Your knowledge, and the golden Q&A set | 20 |
+| 3 | Engineering practice & mindset | 20 |
+| 4 | Quality of your own code | 15 |
+| 5 | The interface — your own, or real improvements to the course console | 15 |
+| 6 | Design & architecture of what you added | 10 |
+| B1 | Text to speech, wired in | up to +5 |
+| B2 | Robust engineering beyond the course bar | up to +5 |
+| B3 | Innovation & originality | up to +5 |
 
-Each criterion is scored on the same six-band scale, then weighted:
+Weighted total = Σ score × weight / 100, out of **100**, plus up to **15** bonus.
 
-| Band | Meaning |
+The 1–100 line scores follow fixed anchors, so two reviewers land in the same range:
+
+| Range | Meaning |
 |---|---|
-| **0 · Missing** | No evidence in the repository. |
-| **1 · Attempted** | Started and abandoned, or present but non-functional. |
-| **2 · Partial** | Works in part, or works only in a way the author did not intend. |
-| **3 · Meets** | Does what was asked. This is a good, passing result. |
-| **4 · Strong** | Does what was asked, plus a decision the author can defend. |
-| **5 · Exemplary** | Would survive being handed to another engineer without explanation. |
-
-**Band 3 is the target.** It means you did the thing that was asked and it works. Bands 4
-and 5 are not "more features" — they are the same work with a reason behind it and
-someone else able to pick it up.
+| 1–20 | Missing, or started and abandoned |
+| 21–40 | Present but broken, or works only partly |
+| 41–60 | Works, at the level of following the course steps |
+| **61–75** | **Solidly meets the requirement — the target** |
+| 76–90 | Strong: works, plus decisions the author can defend |
+| 91–100 | Exemplary: could be handed to another engineer without explanation |
 
 ### What each criterion looks for
 
-**1 · Your agent, deployed in Foundry.** A persona of your own authorship, meaningfully
-different from the samples. Evidence it is deployed and invocable — not just a JSON file.
-An explanation, in your own words, of what its instructions change about the answers.
+**1 · Your agent, deployed in Foundry (20).** A persona of your own authorship,
+meaningfully different from the four samples. Evidence it is deployed and invocable —
+not just a JSON file. An explanation, in your own words, of what its instructions change
+about the answers.
 
-**2 · Your knowledge, and the golden set.** A coherent corpus of your own. At least ten
-golden questions with known answers, including questions that should be refused. A
-reproducible way to run them. A recorded score. Best of all: a before and after, with an
-account of what you changed.
+**2 · Your knowledge, and the golden Q&A set (20).** A coherent corpus of your own. At
+least ten golden questions with known answers, including questions that should be
+refused. A reproducible way to run them and a recorded score. Best of all: a before and
+after, with an account of what you changed.
 
-**3 · Your interface.** Yours, working, started from a documented command, showing the
-retrieval rather than hiding it, with the RAG toggle present.
+**3 · Engineering practice & mindset (20).** The difference between engineering and
+vibecoding, made visible: a clean clone plus your README plausibly gives a working
+system; configuration lives in environment variables with no secrets in the history —
+**a committed live key caps this line at 20**; dependencies are pinned; commits are
+small, described, and yours; claims in your five answers match the repository; what is
+measured is measured, and what is broken is named.
 
-**4 · It runs, and it is put together sensibly.** A clean clone plus your README gets a
-working system. No secrets committed — this is checked, and a committed key caps this
-criterion at band 1 regardless of everything else. Configuration through environment
-variables. A commit history someone can follow.
+**4 · Quality of your own code (15).** Judged only on code you added or changed, not on
+the course code you inherited. Readable names, functions that do one thing, no dead code
+or commented-out experiments left behind, errors handled rather than swallowed, and
+consistency with the codebase you built on. AI-generated code is fine — left unread and
+unintegrated, it is not.
 
-**5 · Ownership and understanding.** Commits that are yours. A brief that matches what is
-actually in the repository — accuracy here is worth more than achievement. An honest
-account of what is unfinished. Using AI heavily is fine and expected; being unable to
-explain what it produced is not.
+**5 · The interface (15).** Either your own build, in any technology, or **substantive
+improvements to the course console** — new capability, not a restyle. In both cases:
+started from a documented command, retrieval made visible (passages, scores or
+citations), the RAG toggle present.
 
-**6 · Text to speech.** Working, wired into your interface, and not at the expense of the
-other five.
+**6 · Design & architecture (10).** How your additions are shaped: separated concerns,
+sensible boundaries, configuration over hard-coding, patterns used where they earn their
+keep — and no cargo-cult abstraction where a function would do.
+
+**B1 · Text to speech (+5).** Working and wired into your interface, not at the expense
+of the core.
+
+**B2 · Robust engineering beyond the bar (+5).** Things the course did not require but
+real systems do: tests that run, deliberate error handling, logging that would help at
+3 a.m., a CI check, structured evaluation beyond the golden set.
+
+**B3 · Innovation & originality (+5).** An idea that is genuinely yours: an unexpected
+corpus, a retrieval twist, an agent capability, an evaluation method, a UI concept.
+Named in your feedback when it exists — reviewers are explicitly asked to look for it.
 
 ### What does not affect your mark
 
 - How pretty the interface is.
 - How high the golden-set score is. A measured 6/10 with a clear account of the four
   failures beats an unmeasured claim of perfection.
-- How much AI wrote. Only whether you can explain it.
-- Whether you finished the optional part.
+- How much AI wrote. Only whether you read, integrated and can explain it.
+- Whether you attempted the bonuses.
 
 ---
 

@@ -57,3 +57,6 @@ code/frontend/*.log
 
 # --- student submissions: cloned repos, scores, feedback. Never committed. ---
 _submissions/
+
+# --- session handoff notes: local working file, not course material ---
+HANDOFF.md
