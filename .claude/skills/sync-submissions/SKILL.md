@@ -6,7 +6,7 @@ description: Clone and keep up to date the Libra Bank Academy project repositori
 # Syncing the submission repositories
 
 This skill owns the mirror: every student repository cloned or freshened under
-`_submissions/`, and one file — `_submissions/submissions.md` — that answers at a
+`_submissions/repos/`, and one file — `_submissions/submissions.md` — that answers at a
 glance *who has actually done work*. Evaluation is a separate skill
 (`evaluate-projects`) that consumes what this one maintains.
 
@@ -25,7 +25,7 @@ The converter (standard library only — an xlsx is a zip of XML) does three thi
 raw export cannot: it strips GitHub `/tree/<branch>` page URLs to clonable repository
 URLs **while recording the branch** — students paste the page they are looking at, and
 that branch is where their work lives; it writes each student's project description to
-`_submissions/answers/<slug>.md`, so the evaluation can hand every agent only its own
+`_submissions/review/answers/<slug>.md`, so the evaluation can hand every agent only its own
 student's answers; and it appends participants who submitted outside the form
 (`extra-participants.csv`), marking a missing description with the ANSWERS UNAVAILABLE
 marker so it is scored 0 on that line without penalty anywhere else.

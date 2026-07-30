@@ -51,13 +51,13 @@ Anchors: 1–20 missing · 21–40 broken/partial · 41–60 works at course-fol
 
 Per student, three things, all produced by `sync-submissions`:
 
-- **answers**: `_submissions/answers/<slug>.md` — their project description. If the file
+- **answers**: `_submissions/review/answers/<slug>.md` — their project description. If the file
   carries the ANSWERS UNAVAILABLE marker (a technical issue outside the student's
   control), it goes into the prompt as-is; the prompt rules handle it.
 - **warnings** and **evaluated branch**: that student's rows from
   `_submissions/submissions.md`. Extract only their own — a tracked venv or `.env` is
   evidence the evaluator should not have to rediscover.
-- **repository path**: `_submissions/<slug>/`, already checked out on the branch the
+- **repository path**: `_submissions/repos/<slug>/`, already checked out on the branch the
   student submitted.
 
 Evaluate only students whose mapping row says cloned.
@@ -117,7 +117,7 @@ prompt and re-runs everyone.
 ## Step 4 · Assemble
 
 ```
-_submissions/feedback/
+_submissions/review/feedback/
   _summary.md      one row per student: weighted total, per-line scores, bonuses,
                    innovation-found flag + cohort observations from step 3
   <slug>.md        1 · internal scoring record (instructor only)

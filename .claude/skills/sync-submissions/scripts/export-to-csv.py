@@ -6,7 +6,7 @@ extra-participants.csv for submissions that arrived outside the form, and writes
 
     _submissions/responses.csv        Timestamp, Full name, Email, Git repository URL,
                                       Submitted branch, Answers  (input to sync-repos.ps1)
-    _submissions/answers/<slug>.md    one file per student with their project
+    _submissions/review/answers/<slug>.md    one file per student with their project
                                       description — each evaluator receives ONLY its own
                                       student's file, which is part of the isolation story
 
@@ -97,7 +97,7 @@ def main():
     if not (c_name and c_repo):
         sys.exit(f"Could not find name/repo columns in: {dict(sorted(header.items()))}")
 
-    answers_dir = OUT_DIR / "answers"
+    answers_dir = OUT_DIR / "review" / "answers"
     answers_dir.mkdir(parents=True, exist_ok=True)
 
     out, seen = [], {}

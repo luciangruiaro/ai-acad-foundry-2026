@@ -97,7 +97,9 @@ foreach ($key in $submissions.Keys) {
     $name = if ($colName) { "$($row.$colName)".Trim() } else { $key }
     $url  = "$($row.$colRepo)".Trim()
     $slug = Get-Slug $name $key
-    $dest = Join-Path $OutDir $slug
+    $repoRoot = Join-Path $OutDir "repos"
+    New-Item -ItemType Directory -Force $repoRoot | Out-Null
+    $dest = Join-Path $repoRoot $slug
 
     $wantBranch = if ($colBranch) { "$($row.$colBranch)".Trim() } else { "" }
 
