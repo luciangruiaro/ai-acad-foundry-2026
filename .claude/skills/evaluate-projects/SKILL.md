@@ -49,17 +49,32 @@ Anchors: 1–20 missing · 21–40 broken/partial · 41–60 works at course-fol
 
 ## Step 1 · Gather inputs
 
-From the form export: the five project answers per student. From
-`_submissions/submissions.md`: the slug, branches and warnings per student — pass each
-student's **warnings** into their evaluator prompt (a tracked venv or `.env` is
-evidence on the engineering-practice line; the evaluator should not have to rediscover
-it). Evaluate only students whose mapping row says cloned.
+Per student, three things, all produced by `sync-submissions`:
+
+- **answers**: `_submissions/answers/<slug>.md` — their project description. If the file
+  carries the ANSWERS UNAVAILABLE marker (a technical issue outside the student's
+  control), it goes into the prompt as-is; the prompt rules handle it.
+- **warnings** and **evaluated branch**: that student's rows from
+  `_submissions/submissions.md`. Extract only their own — a tracked venv or `.env` is
+  evidence the evaluator should not have to rediscover.
+- **repository path**: `_submissions/<slug>/`, already checked out on the branch the
+  student submitted.
+
+Evaluate only students whose mapping row says cloned.
 
 ## Step 2 · One fresh agent per repository
 
 Launch one `general-purpose` subagent per repository, in parallel batches. The prompt
-is `references/evaluator-prompt.md` with exactly three placeholders filled: repository
-path, the five answers, the sync warnings. Nothing else changes between students.
+is `references/evaluator-prompt.md` with exactly four placeholders filled: repository
+path, the evaluated branch, the student's answers, the student's sync warnings.
+Nothing else changes between students.
+
+**Isolation is absolute, and it is the orchestrator's job.** Each agent receives only
+its own student's four values — never the mapping file itself (it lists every student),
+never another student's answers or score, never a running summary, never the
+observation that "most projects did X". Cross-contamination does not need malice; it
+only needs a shared context. If a prompt would tell an agent anything about the cohort,
+it is wrong.
 
 Non-negotiable rules carried in the prompt:
 
@@ -81,6 +96,11 @@ Non-negotiable rules carried in the prompt:
 7. **Look for innovation deliberately.** One explicit pass over the repo asking "what
    here did the course not teach?" — an unexpected corpus, a retrieval twist, an agent
    capability, an evaluation method, a UI concept. Found or not, say which.
+8. **Missing answers are not the student's fault when marked so.** If the answers text
+   carries the ANSWERS UNAVAILABLE marker, score the answers-verification line 0 with
+   the note "pending resubmission — technical issue, no fault", and treat the absence
+   as evidence of nothing on any other line: score them from the repository alone.
+   When the description arrives later, that student is re-evaluated in full.
 
 Each agent returns the filled `references/evaluation-template.md` plus the two drafted
 letters from the templates.

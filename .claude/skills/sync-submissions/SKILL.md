@@ -10,21 +10,40 @@ This skill owns the mirror: every student repository cloned or freshened under
 glance *who has actually done work*. Evaluation is a separate skill
 (`evaluate-projects`) that consumes what this one maintains.
 
-Run it via the script; it is deterministic and repeatable:
+Two deterministic steps, in order:
 
 ```powershell
-.claude/skills/sync-submissions/scripts/sync-repos.ps1 -Export <form-export.csv>
+# 0 · normalize the form export (XLSX -> CSV + per-student answer files)
+python .claude/skills/sync-submissions/scripts/export-to-csv.py `
+    "_submissions/<form export>.xlsx" _submissions/extra-participants.csv
+
+# 1 · clone / update everything and rebuild the mapping
+.claude/skills/sync-submissions/scripts/sync-repos.ps1 -Export _submissions/responses.csv -OutDir _submissions
 ```
 
-Re-running is always safe: existing clones are fetched and fast-forwarded, new rows are
-cloned, and the mapping file is rebuilt from scratch on every run.
+The converter (standard library only — an xlsx is a zip of XML) does three things the
+raw export cannot: it strips GitHub `/tree/<branch>` page URLs to clonable repository
+URLs **while recording the branch** — students paste the page they are looking at, and
+that branch is where their work lives; it writes each student's project description to
+`_submissions/answers/<slug>.md`, so the evaluation can hand every agent only its own
+student's answers; and it appends participants who submitted outside the form
+(`extra-participants.csv`), marking a missing description with the ANSWERS UNAVAILABLE
+marker so it is scored 0 on that line without penalty anywhere else.
+
+The sync then **checks out the submitted branch** in each clone — analysing the default
+branch when the student named another would score the wrong code — and reports the
+evaluated branch per student in the mapping.
+
+Re-running either step is always safe: existing clones are fetched and fast-forwarded,
+new rows are cloned, and both the CSV and the mapping are rebuilt from scratch.
 
 ## What the script does
 
-1. **Parse the export.** Columns found by header (name / email / repository URL), never
-   by position. Duplicate submissions by the same person: latest timestamp wins, noted
-   in the report. Malformed URLs (Drive links, zips, profile pages) are classified, not
-   guessed at.
+1. **Parse the export.** Columns found by header (name / email / repository URL /
+   submitted branch), never by position. Identity is the email when present, the name
+   when not — participants added outside the form have no address. Duplicates: latest
+   timestamp wins, noted. Malformed URLs (Drive links, zips, profile pages) are
+   classified, not guessed at.
 2. **Clone or update.** New repositories are cloned in full — all branches, full
    history, because the analysis needs authorship over time. Existing ones get
    `fetch --all --prune` plus a fast-forward of the default branch. Credential prompts

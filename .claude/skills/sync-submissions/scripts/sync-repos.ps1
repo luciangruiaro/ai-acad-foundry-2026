@@ -59,16 +59,20 @@ function Find-Column($patterns) {
     }
     return $null
 }
-$colName  = Find-Column @('full\s*name', '^name')
-$colEmail = Find-Column @('e-?mail')
-$colRepo  = Find-Column @('repo', 'git')
+$colName   = Find-Column @('full\s*name', '^name')
+$colEmail  = Find-Column @('e-?mail')
+$colRepo   = Find-Column @('repo', 'git')
+$colBranch = Find-Column @('submitted\s*branch')
 if (-not $colRepo) { throw "No repository column found. Headers: $($headers -join ' | ')" }
-Write-Host "Columns  name='$colName'  email='$colEmail'  repo='$colRepo'"
+Write-Host "Columns  name='$colName'  email='$colEmail'  repo='$colRepo'  branch='$colBranch'"
 
 $submissions = [ordered]@{}
 $dupePeople  = @()
 foreach ($row in $rows) {
-    $key = if ($colEmail) { "$($row.$colEmail)".Trim().ToLower() } else { "$($row.$colName)".Trim().ToLower() }
+    # identity = email when present, name otherwise — PER ROW, because participants
+    # added outside the form arrive without an address
+    $key = if ($colEmail) { "$($row.$colEmail)".Trim().ToLower() } else { "" }
+    if (-not $key) { $key = "$($row.$colName)".Trim().ToLower() }
     if (-not $key) { continue }
     if ($submissions.Contains($key)) { $dupePeople += $key }
     $submissions[$key] = $row                       # rows arrive oldest-first; last wins
@@ -90,10 +94,12 @@ foreach ($key in $submissions.Keys) {
     $slug = Get-Slug $name $key
     $dest = Join-Path $OutDir $slug
 
+    $wantBranch = if ($colBranch) { "$($row.$colBranch)".Trim() } else { "" }
+
     $r = [ordered]@{
-        Name = $name; Slug = $slug; Url = $url
+        Name = $name; Slug = $slug; Url = $url; Submitted = $wantBranch
         Result = ""; Class = ""; Detail = ""
-        Default = ""; Branches = @(); StudentCommits = 0; LastStudent = ""
+        Default = ""; EvalBranch = ""; Branches = @(); StudentCommits = 0; LastStudent = ""
         StudentLoC = 0; Warnings = @(); OtherAuthors = @()
     }
 
@@ -146,9 +152,28 @@ foreach ($key in $submissions.Keys) {
         $r.Result = "cloned"; $r.Detail = "new clone"
     }
 
-    # ---- analyse
-    $default = (Invoke-Git "-C `"$dest`" rev-parse --abbrev-ref HEAD").Trim()
+    # ---- which branch the evaluation should look at
+    # Students often submit the page they were looking at — a /tree/<branch> URL. The
+    # converter records that branch, and it is where their work lives: analysing and
+    # checking out the default instead would score the wrong code.
+    $defaultRef = (Invoke-Git "-C `"$dest`" symbolic-ref refs/remotes/origin/HEAD").Trim()
+    $default = if ($defaultRef -match 'origin/(.+)$') { $Matches[1] }
+               else { (Invoke-Git "-C `"$dest`" rev-parse --abbrev-ref HEAD").Trim() }
     $r.Default = $default
+
+    $evalBranch = $default
+    if ($wantBranch) {
+        Invoke-Git "-C `"$dest`" rev-parse --verify `"origin/$wantBranch`"" | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            $evalBranch = $wantBranch
+        } else {
+            $r.Warnings += "submitted branch ``$wantBranch`` does not exist on the remote — falling back to ``$default``"
+        }
+    }
+    $r.EvalBranch = $evalBranch
+    # -B: create or reset the local branch to the remote — this mirror holds no local work
+    Invoke-Git "-C `"$dest`" checkout -q -B `"$evalBranch`" `"origin/$evalBranch`"" | Out-Null
+
     $total = (Invoke-Git "-C `"$dest`" rev-list --count HEAD").Trim()
     if (-not $total -or $total -eq "0") {
         $r.Result = "failed"; $r.Class = "empty"; $r.Detail = "Cloned, but the repository has no commits."
@@ -161,7 +186,7 @@ foreach ($key in $submissions.Keys) {
     $branchNames = (Invoke-Git "-C `"$dest`" branch -r") -split "`n" |
                    ForEach-Object { $_.Trim() } |
                    Where-Object { $_ -and $_ -notmatch '->' }
-    $defaultLastStudent = ""
+    $evalLastStudent = ""
     foreach ($b in $branchNames) {
         $short = $b -replace '^origin/', ''
         # %x09 is a TAB, expanded by git itself — nothing for cmd.exe to misread.
@@ -173,17 +198,17 @@ foreach ($key in $submissions.Keys) {
             Name = $short; Total = $log.Count
             Student = $studentLines.Count; LastStudent = $lastStudent
         }
-        if ($short -eq $default) { $defaultLastStudent = $lastStudent }
+        if ($short -eq $evalBranch) { $evalLastStudent = $lastStudent }
     }
-    $defaultInfo = $r.Branches | Where-Object Name -eq $default
-    $r.StudentCommits = if ($defaultInfo) { $defaultInfo.Student } else { 0 }
-    $r.LastStudent    = $defaultLastStudent
+    $evalInfo = $r.Branches | Where-Object Name -eq $evalBranch
+    $r.StudentCommits = if ($evalInfo) { $evalInfo.Student } else { 0 }
+    $r.LastStudent    = $evalLastStudent
 
-    # unmerged work: a branch whose last student commit is newer than the default's
+    # unmerged work: a branch whose last student commit is newer than the evaluated one's
     foreach ($b in $r.Branches) {
-        if ($b.Name -ne $default -and $b.LastStudent -and
-            (-not $defaultLastStudent -or $b.LastStudent -gt $defaultLastStudent)) {
-            $r.Warnings += "branch ``$($b.Name)`` has student work newer than ``$default`` ($($b.LastStudent)) — possibly unmerged"
+        if ($b.Name -ne $evalBranch -and $b.LastStudent -and
+            (-not $evalLastStudent -or $b.LastStudent -gt $evalLastStudent)) {
+            $r.Warnings += "branch ``$($b.Name)`` has student work newer than ``$evalBranch`` ($($b.LastStudent)) — possibly unmerged"
         }
     }
 
@@ -196,7 +221,7 @@ foreach ($key in $submissions.Keys) {
         $r.Warnings += "no student-authored commits on any branch — the fork may be untouched"
     }
 
-    # student LoC on the default branch: additions in non-merge, non-instructor commits,
+    # student LoC on the EVALUATED branch (HEAD after checkout): additions in
     # excluding vendored and generated paths. An approximation, and reported as one.
     $loc = 0
     $numstat = (Invoke-Git "-C `"$dest`" log --no-merges --numstat --format=C%x09%an") -split "`n"
@@ -254,7 +279,8 @@ $md += ""
 $md += "Synced $now from ``$(Split-Path $Export -Leaf)`` · $($results.Count) submissions · **$($ok.Count) cloned**, **$($bad.Count) failed**"
 $md += ""
 $md += "Student work = commits whose author does not match ``$InstructorPattern``."
-$md += "LoC = lines added by student commits on the default branch, vendored and generated files excluded — a screening number, not a score."
+$md += "LoC = lines added by student commits on the **evaluated branch**, vendored and generated files excluded — a screening number, not a score."
+$md += "Evaluated branch = the branch from the submitted /tree/ URL when one was given (and found), otherwise the default. It is checked out in the clone."
 if ($dupePeople) {
     $md += ""
     $md += "> $(@($dupePeople | Select-Object -Unique).Count) student(s) submitted more than once; the latest submission was kept."
@@ -262,11 +288,12 @@ if ($dupePeople) {
 $md += ""
 $md += "## Overview"
 $md += ""
-$md += "| Student | Default | Branches | Student commits | Last activity | Student LoC | Warnings |"
+$md += "| Student | Evaluated branch | Branches | Student commits | Last activity | Student LoC | Warnings |"
 $md += "|---|---|---|---|---|---|---|"
 foreach ($r in ($ok | Sort-Object Name)) {
     $last = if ($r.LastStudent) { $r.LastStudent } else { "—" }
-    $md += "| $($r.Name) | ``$($r.Default)`` | $($r.Branches.Count) | $($r.StudentCommits) | $last | $($r.StudentLoC) | $($r.Warnings.Count) |"
+    $ev = if ($r.EvalBranch -ne $r.Default) { "``$($r.EvalBranch)`` (submitted)" } else { "``$($r.EvalBranch)``" }
+    $md += "| $($r.Name) | $ev | $($r.Branches.Count) | $($r.StudentCommits) | $last | $($r.StudentLoC) | $($r.Warnings.Count) |"
 }
 $md += ""
 $md += "## Detail"
@@ -274,11 +301,11 @@ foreach ($r in ($ok | Sort-Object Name)) {
     $md += ""
     $md += "### $($r.Name) — ``$($r.Slug)``"
     $md += ""
-    $md += "$($r.Url) · $($r.Detail)"
+    $md += "$($r.Url) · $($r.Detail) · evaluated branch: ``$($r.EvalBranch)``$(if ($r.Submitted) { ' (from the submitted URL)' }) · default: ``$($r.Default)``"
     $md += ""
     $md += "| Branch | Commits | Student commits | Last student commit |"
     $md += "|---|---|---|---|"
-    foreach ($b in ($r.Branches | Sort-Object { $_.Name -ne $r.Default }, Name)) {
+    foreach ($b in ($r.Branches | Sort-Object { $_.Name -ne $r.EvalBranch }, Name)) {
         $last = if ($b.LastStudent) { $b.LastStudent } else { "—" }
         $md += "| ``$($b.Name)`` | $($b.Total) | $($b.Student) | $last |"
     }

@@ -1,6 +1,6 @@
 # Evaluator prompt
 
-Fill the three placeholders, change nothing else — identical prompts are what make
+Fill the four placeholders, change nothing else — identical prompts are what make
 thirty scores comparable.
 
 ---
@@ -11,6 +11,9 @@ hygiene warnings from the sync pass. You know nothing about the student and noth
 about any other submission — evaluate only against the rubric below.
 
 **Repository (read-only):** `{{REPO_PATH}}`
+**Branch under evaluation (already checked out):** `{{EVAL_BRANCH}}` — this is the
+branch the student submitted; judge the working tree and this branch's history, and
+treat other branches only as context.
 
 **The student's five answers from the submission form:**
 
@@ -43,6 +46,11 @@ student's work, and only that is judged on the code lines.**
    quotation. No evidence → score in the 1–20 band and the words "no evidence found".
 5. **The five answers are claims to verify.** The repository wins every disagreement;
    record each one — they are the substance of scoring line 7.
+   **If the answers text is the ANSWERS UNAVAILABLE marker** (a technical issue outside
+   the student's control): score line 7 as 0 with the note "pending resubmission —
+   technical issue, no fault", and treat the absence as evidence of NOTHING on any
+   other line — lines 1–6 and 8 are scored from the repository alone, exactly as if a
+   description had confirmed them.
 6. **Secrets: detect, never reproduce.** Check tree and history (`git log -p` on
    `.env*` and config). Record kind and location only.
 
